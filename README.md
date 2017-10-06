@@ -1,7 +1,7 @@
 # Community
 Community is a crowd funding and revenue sharing platform. Using the blockchain,
 investors see return on their investments in real time. Community's first application 
-on the platform, **new name here**, put artists to be in charge of their concerts and 
+on the platform, **new name here**, puts artists in charge of their concerts and 
 shows.
 
 # The Problem
@@ -23,7 +23,7 @@ In order to have a show for your fans there are some prerequisites that must be 
 1. Food & Drinks
 
 # Analysis
-You have sketched out your problem, now lets see how we can make this concert happen. First of all list out your fixed costs:
+You have sketched out your problem, now lets see how we can make this concert happen. First of all, list out your fixed costs:
 ## Fixed Costs
 1. Venue - $500
 1. Staff - 5 people @ $20/hr * 5hrs = $500
@@ -49,18 +49,18 @@ You have sketched out your problem, now lets see how we can make this concert ha
 
 # Solution: The Community Platform
 ## Crowd Funding
-The Community platform allows you to fund raise and look for investors. Let's say you cut 
-out $1700(your fixed cost) of your revenue and put it up for invests to buy in. That means 
+The Community platform allows you to fundraise and look for investors. Let's say you cut 
+out $1700 (your fixed cost) of your revenue and put it up for investors to buy in. That means 
 that 54.83% of the revenue will go to your investors.
 ## Revenue Sharing
 We have our revenue projections above, but keep in mind that the actual revenue would be 
 different.
 * To boost your revenue, the community platform sells your tickets based on demand. The 
-price will never lower than a floor threshold you set, and never be higher than the ceiling
+price will never be lower than a floor threshold you set and never be higher than the ceiling
 you set.
 * All vendors at your venue will have a Point of Sale tool where you and your investors will
 be paid out in real time. Yes, that means every time someone buys a ticket, 53% goes to your
-investors and the rest goes to you. And everytime someone buys a hotdog from the food truck
+investors and the rest goes to you. And everytime someone buys a hotdog from the food truck,
 the same transaction happens.
 * To futher bring the fixed costs down, venues, staff and food truck merchants can 
 participate in a private rev sharing model. 
@@ -74,12 +74,12 @@ sold.
 # Community: the ticketing platform and secondary market
 All tickets issued on the community platform are tracked as digital assets. This means that
 a token is created in place of each ticket. During entry, the staff scans the attendee's
-Community wallet address and checks on the blockchain to see if that wallet have the token.
-Tickets as a digital asset solves two problems for concert goers:
-1. **Scams**: Selling a physical ticket to someone can be risky when the two parties are 
-co-located in the same geographical area. The ticket has to be mail and the monetary
+Community wallet address and checks on the blockchain to see if that wallet has the token.
+Tickets as a digital asset solve two problems for concert goers:
+1. **Scams**: Selling a physical ticket to someone can be risky when the two parties are not
+co-located in the same geographical area. The ticket has to be mailed and the monetary
 transaction would have to depend a lot on trust.
 1. **Double Spend**: Buying a digital ticket can be risky because you don't know if the
-seller have screenshot the ticket before. Then you better get there before they did.
+seller has screenshotted the ticket before. Then you better get there before they did.
 ## Revenue from the secondary market
-When a users successfully sells their tickets on the Community platform, they will be charged a transaction fee that will contribute the the artist's revenue.
+When a user successfully sells their tickets on the Community platform, they will be charged a transaction fee that will contribute the the artist's revenue.
