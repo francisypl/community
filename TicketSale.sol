@@ -17,12 +17,13 @@ contract TicketSale {
     mapping(address => uint256) tickets;
     mapping(address => uint256) forSale;
     
-    function TicketSale(uint256 _supply, uint256 _priceInWei, bytes32 _name) {
+    function TicketSale(uint256 _supply, uint256 _priceInWei, bytes32 _name, bool _enableAfterMarket) {
         owner = msg.sender;
         tickets[owner] = _supply;
         priceInWei = _priceInWei;
         name = _name;
-        afterMarketIsClosed = false;
+        afterMarketIsClosed = !_enableAfterMarket;
+        // TODO: implement time of the event
     }
     
     function buyTicketFromIssuer() payable returns (bool) {
@@ -52,7 +53,11 @@ contract TicketSale {
     }
     
     function buyTicketFromSeller(address buyFrom) payable returns (bool) {
-        require(forSale[buyFrom] >= 1 && msg.value >= priceInWei);
+        require(
+            forSale[buyFrom] >= 1 &&
+            msg.value >= priceInWei && 
+            afterMarketIsClosed == false
+        );
         
         msg.sender.transfer(msg.value.sub(priceInWei));
         buyFrom.transfer(priceInWei);
@@ -98,6 +103,7 @@ contract TicketSale {
     }
     
     function useTicket() returns (bool) {
+        // TODO: can only use ticket at the after the start of the event
         require(tickets[msg.sender] >= 1);
         tickets[msg.sender] = tickets[msg.sender].sub(1);
         
@@ -112,5 +118,19 @@ contract TicketSale {
         return tickets[msg.sender] >= 1;
     }
     
+    // TODO: implement a refund all feature
+    
+    function cashOut() returns (bool) {
+        // TODO: owner can only cash out after 30 days of event
+        require(msg.sender == owner);
+        owner.transfer(this.balance);
+        return true;
+    }
+    
+    function kill() returns (bool) {
+        require(msg.sender == owner);
+        selfdestruct(owner);
+        return true;
+    }
 }
 
