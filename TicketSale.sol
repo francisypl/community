@@ -13,6 +13,7 @@ contract TicketSale {
     uint256 public priceInWei;
     bytes32 public name;
     address[] public sellers;
+    bool afterMarketIsClosed;
     mapping(address => uint256) tickets;
     mapping(address => uint256) forSale;
     
@@ -21,6 +22,7 @@ contract TicketSale {
         tickets[owner] = _supply;
         priceInWei = _priceInWei;
         name = _name;
+        afterMarketIsClosed = false;
     }
     
     function buyTicketFromIssuer() payable returns (bool) {
@@ -37,7 +39,7 @@ contract TicketSale {
     }
     
     function sellTicket() returns (bool) {
-        require(tickets[msg.sender] >= 1);
+        require(tickets[msg.sender] >= 1 && afterMarketIsClosed == false);
         
         if (forSale[msg.sender] == 0) {
             sellers.push(msg.sender);
@@ -64,6 +66,8 @@ contract TicketSale {
     }
     
     function buyTicketFromAnySeller() payable returns (bool) {
+        require(afterMarketIsClosed == false);
+        
         bool isSucessful = false;
         for (uint index = 0; index < sellers.length; index++) {
             address seller = sellers[index];
@@ -79,10 +83,14 @@ contract TicketSale {
     
     function closeAfterMarket() returns (bool) {
         require(msg.sender == owner);
-        for (uint index = 0; index < sellers.length; index++) {
-            address seller = sellers[index];
-            if (forSale[seller] >= 1) {
-                tickets[seller] = tickets[seller].add(forSale[seller]);
+        
+        if (!afterMarketIsClosed) {
+            afterMarketIsClosed = true;
+            for (uint index = 0; index < sellers.length; index++) {
+                address seller = sellers[index];
+                if (forSale[seller] >= 1) {
+                    tickets[seller] = tickets[seller].add(forSale[seller]);
+                }
             }
         }
         
