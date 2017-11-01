@@ -11,13 +11,13 @@ contract TicketSale {
     
     address public owner;
     uint256 public priceInWei;
-    bytes32 public name;
-    address[] public sellers;
-    bool afterMarketIsClosed;
+    string public name;
+    address[] sellers;
+    bool public afterMarketIsClosed;
     mapping(address => uint256) tickets;
     mapping(address => uint256) forSale;
     
-    function TicketSale(uint256 _supply, uint256 _priceInWei, bytes32 _name, bool _enableAfterMarket) {
+    function TicketSale(uint256 _supply, uint256 _priceInWei, string _name, bool _enableAfterMarket) public {
         owner = msg.sender;
         tickets[owner] = _supply;
         priceInWei = _priceInWei;
@@ -26,7 +26,7 @@ contract TicketSale {
         // TODO: implement time of the event
     }
     
-    function buyTicketFromIssuer() payable returns (bool) {
+    function buyTicketFromIssuer() public payable returns (bool) {
         require(tickets[owner] >= 1 && msg.value >= priceInWei);
         
         msg.sender.transfer(msg.value.sub(priceInWei));
@@ -39,7 +39,7 @@ contract TicketSale {
         return true;
     }
     
-    function sellTicket() returns (bool) {
+    function sellTicket() public returns (bool) {
         require(tickets[msg.sender] >= 1 && afterMarketIsClosed == false);
         
         if (forSale[msg.sender] == 0) {
@@ -52,10 +52,10 @@ contract TicketSale {
         return true;
     }
     
-    function buyTicketFromSeller(address buyFrom) payable returns (bool) {
+    function buyTicketFromSeller(address buyFrom) public payable returns (bool) {
         require(
             forSale[buyFrom] >= 1 &&
-            msg.value >= priceInWei && 
+            msg.value >= priceInWei &&
             afterMarketIsClosed == false
         );
         
@@ -70,7 +70,7 @@ contract TicketSale {
         return true;
     }
     
-    function buyTicketFromAnySeller() payable returns (bool) {
+    function buyTicketFromAnySeller() public payable returns (bool) {
         require(afterMarketIsClosed == false);
         
         bool isSucessful = false;
@@ -86,7 +86,7 @@ contract TicketSale {
         return isSucessful;
     }
     
-    function closeAfterMarket() returns (bool) {
+    function closeAfterMarket() public returns (bool) {
         require(msg.sender == owner);
         
         if (!afterMarketIsClosed) {
@@ -102,7 +102,7 @@ contract TicketSale {
         return true;
     }
     
-    function useTicket() returns (bool) {
+    function useTicket() public returns (bool) {
         // TODO: can only use ticket at the after the start of the event
         require(tickets[msg.sender] >= 1);
         tickets[msg.sender] = tickets[msg.sender].sub(1);
@@ -110,27 +110,31 @@ contract TicketSale {
         return true;
     }
     
-    function numberOfTickets() constant returns (uint256) {
+    function numberOfTickets() public constant returns (uint256) {
         return tickets[msg.sender];
     }
     
-    function haveTicket() constant returns (bool) {
+    function haveTicket() public constant returns (bool) {
         return tickets[msg.sender] >= 1;
     }
     
     // TODO: implement a refund all feature
     
-    function cashOut() returns (bool) {
+    function cashOut() public returns (bool) {
         // TODO: owner can only cash out after 30 days of event
         require(msg.sender == owner);
         owner.transfer(this.balance);
         return true;
     }
     
-    function kill() returns (bool) {
+    function kill() public returns (bool) {
         require(msg.sender == owner);
         selfdestruct(owner);
         return true;
+    }
+
+    function ping() public constant returns (string) {
+        return "pong";
     }
 }
 
