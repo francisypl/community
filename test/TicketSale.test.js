@@ -35,7 +35,7 @@ contract('TicketSale', function(accounts) {
     });
   });
 
-  it.only('shuold buy a ticket from the issuer', () => {
+  it('shuold buy a ticket from the issuer', () => {
     var meta, getBalance, contractAddr;
     const owner = accounts[0];
     const buyer = accounts[1];
