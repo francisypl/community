@@ -36,24 +36,46 @@ contract('TicketSale', function(accounts) {
   });
 
   it.only('shuold buy a ticket from the issuer', () => {
-    var meta;
+    var meta, getBalance, contractAddr;
+    const owner = accounts[0];
     const buyer = accounts[1];
 
     return TicketSale.deployed().then(instance => {
       meta = instance;
-      return meta.numberOfTickets.call(buyer, { from: buyer });
+      getBalance = meta.contract._eth.getBalance; 
+      contractAddr = meta.contract.address;
+      return meta.owner();
+    })
+    .then(addr => {
+      assert.equal(addr, owner);
+      return meta.numberOfTickets.call({ from: buyer });
     })
     .then(numTickets => {
-      console.log('number of tickets =>', numTickets);
       assert.equal(numTickets, 0);
-      // return meta.buyTicketFromIssuer.call(buyer);
+      return meta.numberOfTickets.call({ from: owner });
     })
-    // .then(() => {
-    //   return meta.numberOfTickets.call(buyer);
-    // })
-    // .then(numTickets => {
-    //   assert.equal(numTickets, 1);
-    // });
+    .then((numTickets) => {
+      assert.equal(numTickets, defValues.supply);
+      return getBalance(contractAddr);
+    })
+    .then(balance => {
+      assert.equal(balance, 0);
+      return meta.buyTicketFromIssuer({ from: buyer, value: defValues.priceInWei });
+    })
+    .then(() => {
+      return getBalance(contractAddr);
+    })
+    .then(balance => {
+      assert.equal(balance, defValues.priceInWei);
+      return meta.numberOfTickets.call({ from: owner }); 
+    })
+    .then(numTickets => {
+      assert.equal(numTickets, defValues.supply - 1); 
+      return meta.numberOfTickets.call({ from: buyer });
+    })
+    .then(numTickets => {
+      assert.equal(numTickets, 1);
+    });
   });
 
   it('shuold buy a ticket from the issuer', () => {
