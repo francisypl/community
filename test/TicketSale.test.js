@@ -35,7 +35,7 @@ contract('TicketSale', function(accounts) {
     });
   });
 
-  it.only('should buy a ticket from the issuer', () => {
+  it('should buy a ticket from the issuer', () => {
     let meta, getBalance, contractAddr, purchaseEvent;
     const owner = accounts[0];
     const buyer = accounts[1];
@@ -96,19 +96,48 @@ contract('TicketSale', function(accounts) {
   });
 
   it('should not buy a ticket from the issuer if owner have no more tickets', () => {
-    var meta;
-
-    return TicketSale.deployed().then(instance => {
+    let meta;
+    const owner = accounts[0];
+    const buyer = accounts[1];
+    TicketSale.new([0, 1000, 'test', true]).then(instance => {
       meta = instance;
-
+      return instance.owner.call();;
+    })
+    // assert the owner is the zero account
+    .then(ownerAddress => {
+      assert.equal(ownerAddress, owner);
+      return meta.numberOfTickets.call({ from: owner });
+    })
+    // assert that the owner have no tickets
+    .then(numTickets => {
+      assert.equal(numTickets, 0);
+      return meta.buyTicketFromIssuer({ from: buyer, value: defValues.priceInWei });
+    })
+    // should not reach here because owner have no tickets
+    .then(() => {
+      assert.fail();
+    })
+    // an error should be thrown
+    .catch(err => {
+      assert.equal(true, true);
     });
   });
 
-  it('should buy a ticket from the issuer if ether attached is less than the ticket price', () => {
-    var meta;
-
+  it('should not buy a ticket from the issuer if ether attached is less than the ticket price', () => {
+    let meta;
+    const owner = accounts[0];
+    const buyer = accounts[1];
     return TicketSale.deployed().then(instance => {
       meta = instance;
+      return meta.buyTicketFromIssuer({ from: buyer, value: defValues.priceInWei - 10000 });
+    })
+    // should not reach bc ether sent is less than ticket price
+    .then(() => {
+      assert.fail();
+    })
+    // an error should be thrown
+    .catch(err => {
+      assert(true, true);
     });
   });
 
