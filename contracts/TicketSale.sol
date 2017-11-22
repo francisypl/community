@@ -96,11 +96,15 @@ contract TicketSale {
         tickets[msg.sender] = tickets[msg.sender].sub(1);
     }
     
-    function numberOfTickets() public constant returns (uint256) {
+    function numberOfTickets() public view returns (uint256) {
         return tickets[msg.sender];
     }
+
+    function numberOfTicketsInAfterMarket() public view returns (uint256) {
+        return forSale[msg.sender];
+    }
     
-    function haveTicket() public constant returns (bool) {
+    function haveTicket() public view returns (bool) {
         return tickets[msg.sender] >= 1;
     }
     
@@ -117,7 +121,7 @@ contract TicketSale {
         selfdestruct(owner);
     }
 
-    function ping() public constant returns (string) {
+    function ping() public pure returns (string) {
         return "pong";
     }
 }

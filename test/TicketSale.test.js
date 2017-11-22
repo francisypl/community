@@ -137,13 +137,45 @@ contract('TicketSale', function(accounts) {
     })
     // an error should be thrown
     .catch(err => {
-      assert(true, true);
+      assert.equal(true, true);
+    });
+  });
+
+  it.only('should sell ticket if the user have a ticket to sell', () => {
+    let meta;
+    const owner = accounts[0];
+    const buyer = accounts[1];
+    return TicketSale.deployed().then(instance => {
+      meta = instance;
+      return meta.numberOfTickets.call({ from: buyer });
+    })
+    .then(numTickets => {
+      assert.equal(numTickets, 0, 'buyer should have no tickets to start with');
+      return meta.buyTicketFromIssuer({ from: buyer, value: defValues.priceInWei });
+    })
+    .then(() => {
+      return meta.numberOfTickets.call({ from: buyer });
+    })
+    .then(numTickets => {
+      assert.equal(numTickets, 1, 'buyer should have bought one ticket');
+      return meta.sellTicket({ from: buyer });
+    })
+    .then(() => {
+      return meta.numberOfTickets.call({ from: buyer });
+    })
+    .then(numTickets => {
+      assert.equal(numTickets, 0, 'buyer should have sold one ticket');
+      return meta.numberOfTicketsInAfterMarket.call({ from: buyer });
+    })
+    .then(numTickets => {
+      assert.equal(numTickets, 1, 'buyer should have one ticket in after market');
     });
   });
 
   it('should buy a ticket from the issuer', () => {
     var meta;
-
+    const owner = accounts[0];
+    const buyer = accounts[1];
     return TicketSale.deployed().then(instance => {
       meta = instance;
     });
